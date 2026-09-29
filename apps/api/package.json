@@ -1,0 +1,30 @@
+{
+  "name": "@stellan/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env --watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env dist/src/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "leads": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env src/cli/list-leads.ts",
+    "email:test": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env src/cli/test-email.ts",
+    "test": "node --disable-warning=ExperimentalWarning --test test/app.test.ts"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^7.6.0",
+    "nodemailer": "^10.0.12"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.13.6",
+    "@types/nodemailer": "^8.0.2",
+    "typescript": "^5.9.3"
+  }
+}
