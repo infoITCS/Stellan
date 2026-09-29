@@ -90,8 +90,8 @@ Node's built-in `node:sqlite` provides the primary database — no native module
 ## Quick start
 
 ```bash
-git clone https://github.com/<owner>/stellan-solutions.git
-cd stellan-solutions
+git clone https://github.com/infoITCS/Stellan.git
+cd Stellan
 npm install
 ```
 
@@ -157,7 +157,7 @@ npm run verify
 ## Project structure
 
 ```
-stellan-solutions/
+Stellan/
 ├── package.json              # root workspace manifest
 ├── package-lock.json
 ├── tsconfig.base.json        # shared strict TypeScript config
