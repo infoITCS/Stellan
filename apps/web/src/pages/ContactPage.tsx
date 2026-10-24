@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { contactPageFaqs, services } from '../content.ts';
-import { getLeadsEndpoint } from '../site.ts';
+import { getBookingUrl, getLeadsEndpoint, isExternalBooking, siteConfig } from '../site.ts';
 import { Container, FaqList, PageHero, SectionHeading } from '../components/Shared.tsx';
 import { Icon } from '../components/Icon.tsx';
 
@@ -147,7 +147,7 @@ export function ContactPage() {
       }
 
       setStatus('success');
-      setStatusMessage('Your request has been received. We read every message and reply with a specific question about your situation.');
+      setStatusMessage(`Your request has been received. ${siteConfig.responseTime}, with a specific question about your situation.`);
       setValues(initialValues);
       setErrors({});
     } catch {
@@ -158,12 +158,21 @@ export function ContactPage() {
 
   const fieldClass = (field: keyof FormValues) => errors[field] ? 'field has-error' : 'field';
   const describedBy = (field: keyof FormValues) => errors[field] ? `contact-${field}-error` : field === 'message' ? 'contact-message-hint' : undefined;
+  const bookingHref = getBookingUrl();
+  const bookingExternal = isExternalBooking();
 
   return (
     <main>
-      <PageHero eyebrow="Contact" title="Start with the question behind the request." description="Tell us what is changing, what feels stuck, or what you want to make possible. A focused first conversation is enough to find a useful next step." >
-        <a className="button button-primary" href="#contact-form">Go to the form <Icon name="arrow-down" size={17} /></a>
-        <a className="button button-ghost-light" href="/services">Browse service areas <Icon name="arrow-right" size={17} /></a>
+      <PageHero eyebrow="Contact" title="Start with the question behind the request." description={`Tell us what is changing, what feels stuck, or what you want to make possible. Based in ${siteConfig.address}. ${siteConfig.responseTime}.`}>
+        <a
+          className="button button-primary"
+          href="https://calendly.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Book a 30-min call <Icon name="arrow-up-right" size={17} />
+        </a>
+        <a className="button button-ghost-light" href="#contact-form">Send a message <Icon name="arrow-down" size={17} /></a>
       </PageHero>
 
       <section className="section contact-section" id="contact-form">
@@ -174,9 +183,23 @@ export function ContactPage() {
               <h2>Context beats a perfect brief.</h2>
               <p>Share the decision, the constraint, or the system that needs attention. We will respond with a practical next question rather than a generic sales script.</p>
               <div className="contact-detail-list">
-                <div><span className="contact-detail-icon"><Icon name="globe" size={19} /></span><span><strong>Remote by design</strong><small>Distributed teams, clear handoffs</small></span></div>
-                <div><span className="contact-detail-icon"><Icon name="clock" size={19} /></span><span><strong>Reply from a person</strong><small>A considered answer, not a sequence</small></span></div>
+                <div><span className="contact-detail-icon"><Icon name="mail" size={19} /></span><span><strong><a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a></strong><small>Email is the fastest written route</small></span></div>
+                <div><span className="contact-detail-icon"><Icon name="map-pin" size={19} /></span><span><strong>{siteConfig.address}</strong><small>Based in Ashburn, working across US time zones</small></span></div>
+                <div><span className="contact-detail-icon"><Icon name="clock" size={19} /></span><span><strong>{siteConfig.responseTime}</strong><small>A considered answer, not an automated sequence</small></span></div>
                 <div><span className="contact-detail-icon"><Icon name="shield" size={19} /></span><span><strong>Only used to respond</strong><small>No marketing list, no resale</small></span></div>
+              </div>
+              <div className="contact-booking-card">
+                <p className="eyebrow eyebrow-light">Prefer to talk?</p>
+                <h3>Book a 30-minute call.</h3>
+                <p>A focused conversation about the decision, the deadline, and what a useful first step looks like.</p>
+                <a
+                  className="button button-primary"
+                  href="https://calendly.com/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Choose a time <Icon name="arrow-up-right" size={17} />
+                </a>
               </div>
               <div className="contact-next">
                 <h3>What happens next</h3>
@@ -197,8 +220,8 @@ export function ContactPage() {
                 {statusMessage || 'Fields marked with an asterisk are required.'}
               </div>
               <form aria-busy={status === 'submitting'} aria-describedby="contact-form-status" className="contact-form" noValidate onSubmit={handleSubmit}>
-                <div aria-hidden="true" className="honeypot-field">
-                  <label htmlFor="contact-website">Website</label>
+                <div aria-hidden="true" className="honeypot-field" role="presentation">
+                  <label htmlFor="contact-website">Leave this field empty</label>
                   <input autoComplete="off" id="contact-website" name="website" onChange={updateValue} tabIndex={-1} type="text" value={values.website} />
                 </div>
                 <fieldset className="form-group">

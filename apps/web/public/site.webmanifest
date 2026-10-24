@@ -1,16 +1,18 @@
-{
-  "name": "Stellan Solutions",
-  "short_name": "Stellan",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#202020",
-  "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+﻿{
+    "name":  "Stellan Solutions",
+    "short_name":  "Stellan",
+    "start_url":  "/",
+    "display":  "standalone",
+    "background_color":  "#FFFFFF",
+    "theme_color":  "#202020",
+    "icons":  [
+                  {
+                      "purpose":  "any maskable",
+                      "type":  "image/png",
+                      "sizes":  "any",
+                      "src":  "/stellan-logo.png"
+                  }
+              ]
+}
+              ]
 }

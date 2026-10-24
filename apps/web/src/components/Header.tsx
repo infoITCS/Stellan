@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, FocusEvent as ReactFocusEvent } from 'react';
 import { BrandLockup } from './Brand.tsx';
 import { Icon } from './Icon.tsx';
-import { siteConfig } from '../site.ts';
+import { getBookingUrl, isExternalBooking, siteConfig } from '../site.ts';
 import type { NavigationItem } from '../site.ts';
 
 interface HeaderProps {
@@ -163,10 +163,6 @@ export function Header({ pathname }: HeaderProps) {
         <a aria-label="Stellan Solutions home" className="brand-link" href="/" onClick={() => setOpen(false)}>
           <BrandLockup />
         </a>
-        <div className="header-context">
-          <span className="status-dot" aria-hidden="true" />
-          <span>Remote technology partnership</span>
-        </div>
         <nav aria-label="Primary navigation" className="desktop-nav">
           <ul className="desktop-nav-list">
           {siteConfig.navigation.map((item) => (
@@ -230,8 +226,13 @@ export function Header({ pathname }: HeaderProps) {
           ))}
           </ul>
         </nav>
-        <a className="button button-small button-dark header-cta" href="/contact">
-          Start a conversation
+          <a
+            className="button button-primary header-cta"
+            href="https://calendly.com/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+          Book a 30-min call
           <Icon name="arrow-up-right" size={16} />
         </a>
         <button
@@ -252,11 +253,17 @@ export function Header({ pathname }: HeaderProps) {
           <nav aria-label="Mobile navigation" className="mobile-nav">
             {siteConfig.navigation.map(renderMobileLink)}
           </nav>
-          <a className="button button-primary mobile-drawer-cta" href="/contact" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
-            Talk through a challenge
+            <a
+              className="button button-primary drawer-cta"
+              href="https://calendly.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+              tabIndex={open ? 0 : -1}
+            >
+            Book a 30-min call
             <Icon name="arrow-up-right" size={17} />
           </a>
-          <p className="drawer-note">Remote partnership for distributed teams.</p>
+          <p className="drawer-note">Cybersecurity &amp; risk advisory · Ashburn, Virginia</p>
         </div>
       </div>
     </header>

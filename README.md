@@ -1,6 +1,6 @@
 # Stellan Solutions
 
-Marketing site and lead-capture API for **Stellan Solutions**, a remote technology practice delivering eight connected service areas.
+Marketing site and lead-capture API for **Stellan Solutions** (https://stellansolutions.com), a cybersecurity-first technology practice based in Ashburn, Virginia. Founded by **Umair Mazhar** (Founder & Principal Consultant). Delivers eight connected service areas with a focus on risk reduction and measurable outcomes.
 
 The project is an npm workspaces monorepo with two apps: a statically generated React site and an Express API that validates, stores, and emails contact-form submissions.
 
@@ -44,11 +44,11 @@ Everything runs with zero external services by default. The database is embedded
 
 | # | Service | Slug | Description |
 |---|---------|------|-------------|
-| 01 | Managed IT | `managed-it` | A practical support layer for teams that need reliable technology without carrying every operational detail in-house. |
-| 02 | Cloud services | `cloud-services` | Architecture, migration, and optimization work for teams that need a cloud foundation they can change with confidence. |
-| 03 | Cybersecurity | `cybersecurity` | Security assessment and architecture work that helps teams prioritize what matters, build defensible habits, and prepare for scrutiny. |
-| 04 | Network infrastructure | `network-infrastructure` | Network planning, refresh, and documentation for distributed teams that need connectivity to remain understandable and resilient. |
-| 05 | IT consulting | `it-consulting` | Strategy and architecture guidance for leaders who need a useful sequence of technology decisions, not a shelf of predictions. |
+| 01 | Cybersecurity | `cybersecurity` | Cybersecurity and risk advisory for mid-sized organizations: assessments, prioritized roadmaps, compliance readiness, and fractional CISO support. |
+| 02 | IT consulting | `it-consulting` | Strategy and architecture guidance for leaders who need a useful sequence of technology decisions, not a shelf of predictions. |
+| 03 | Cloud services | `cloud-services` | Architecture, migration, and optimization work for teams that need a cloud foundation they can change with confidence. |
+| 04 | Managed IT | `managed-it` | A practical support layer for teams that need reliable technology without carrying every operational detail in-house. |
+| 05 | Network infrastructure | `network-infrastructure` | Network planning, refresh, and documentation for distributed teams that need connectivity to remain understandable and resilient. |
 | 06 | Enterprise automation | `enterprise-automation` | Microsoft 365 and Power Platform work that makes recurring processes easier to run, review, and change. |
 | 07 | AI engineering | `ai-engineering` | Governed enterprise AI systems with clear data boundaries, evaluation, human review, and an operating plan after launch. |
 | 08 | Web development | `web-development` | Secure, accessible web products and integrations built around a clear user need, a maintainable stack, and a responsible launch. |
@@ -255,10 +255,11 @@ Vite's `envPrefix` is `['VITE_', 'SITE_', 'WEB_']`, so anything with these prefi
 
 | Variable | Default | Notes |
 |----------|---------|-------|
-| `VITE_SITE_URL` | *(unset)* | Canonical site origin. Resolved first. |
+| `VITE_SITE_URL` | `https://stellansolutions.com` | Canonical site origin. Resolved first. |
 | `SITE_URL` | `http://localhost:5173` | Second in the origin chain. |
 | `WEB_ORIGIN` | `http://localhost:5173` | Third in the origin chain. |
 | `VITE_LEADS_ENDPOINT` | `/api/v1/leads` | Path the form posts to. Absolute cross-origin URLs fall back to the default in the browser. |
+| `VITE_BOOKING_URL` | `/contact#contact-form` | Booking/scheduling link (external Cal.com/Calendly supported). |
 
 ### Build-time only (Node, not bundled)
 
@@ -271,12 +272,10 @@ Vite's `envPrefix` is `['VITE_', 'SITE_', 'WEB_']`, so anything with these prefi
 The site origin resolves as:
 
 ```
-VITE_SITE_URL || SITE_URL || WEB_ORIGIN || (VERCEL || NODE_ENV=production
-  ? https://stellan-solutions.vercel.app
-  : http://localhost:4173)
+VITE_SITE_URL || SITE_URL || WEB_ORIGIN || 'https://stellansolutions.com'
 ```
 
-Sitemap and `robots.txt` are only populated when the resolved origin is `https` and not a local host.
+`npm run build` uses only `VITE_SITE_URL` (falling back to the production domain), so a local `SITE_URL=http://localhost:5173` in `.env` cannot leak localhost canonicals or an empty sitemap into the build. Sitemap and `robots.txt` are populated only when the resolved origin is `https` and not a local host.
 
 ---
 
@@ -476,23 +475,24 @@ The app password is stored in `.env`, which is gitignored. Never commit it.
 
 ## Routes and content
 
-Thirteen static routes:
+Fourteen static routes (including terms):
 
 | Path | Page |
 |------|------|
 | `/` | Home |
 | `/services` | Services index |
-| `/about` | About |
-| `/contact` | Contact |
-| `/privacy` | Privacy |
-| `/services/managed-it` | Managed IT |
-| `/services/cloud-services` | Cloud services |
 | `/services/cybersecurity` | Cybersecurity |
-| `/services/network-infrastructure` | Network infrastructure |
 | `/services/it-consulting` | IT consulting |
+| `/services/cloud-services` | Cloud services |
+| `/services/managed-it` | Managed IT |
+| `/services/network-infrastructure` | Network infrastructure |
 | `/services/enterprise-automation` | Enterprise automation |
 | `/services/ai-engineering` | AI engineering |
 | `/services/web-development` | Web development |
+| `/about` | About |
+| `/contact` | Contact |
+| `/privacy` | Privacy |
+| `/terms` | Terms |
 
 Plus `/404` written to `404.html`.
 
@@ -592,7 +592,7 @@ Set `VITE_SITE_URL` to the real origin before building so canonical URLs, the si
 
 - `.env`, `.env.*`, and `apps/api/data/` are gitignored. Only `.env.example` is committed.
 - The SMTP password is a Google app password, revocable without touching the account password.
-- The API sends `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Content-Security-Policy: default-src 'none'`, and `X-DNS-Prefetch-Control: off`, and disables `x-powered-by`.
+- The API sends security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, `Content-Security-Policy`, `Strict-Transport-Security` on HTTPS, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, etc. via `vercel.json` for static hosting; API also sets headers).
 - The JSON body limit is 100 KB.
 - `consent` must be exactly `true`; it is stored as a boolean.
 - A honeypot field silently discards bot submissions with a `202`.
@@ -600,6 +600,7 @@ Set `VITE_SITE_URL` to the real origin before building so canonical URLs, the si
 - Email addresses are lower-cased before storage.
 - There is no CORS middleware. The endpoint is same-origin only, proxied in development. Do not add permissive CORS headers without a reason.
 - There is no authentication on the API. It only accepts writes to one public endpoint. Do not expose the leads database or CLI over a network.
+- A `security.txt` is published at `/.well-known/security.txt` (expires 2027-12-31). SPF/DKIM/DMARC should be configured for `stellansolutions.com` in production.
 
 ---
 

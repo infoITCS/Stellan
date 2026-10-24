@@ -10,7 +10,8 @@ const clientRoot = resolve(appRoot, '../../dist/web');
 const serverRoot = resolve(appRoot, '../../dist/server');
 const templatePath = resolve(clientRoot, 'index.html');
 const serverBundlePath = resolve(serverRoot, 'entry-server.js');
-const siteUrl = (process.env.VITE_SITE_URL || process.env.SITE_URL || process.env.WEB_ORIGIN || (process.env.VERCEL || process.env.NODE_ENV === 'production' ? 'https://stellan-solutions.vercel.app' : 'http://localhost:4173')).trim().replace(/\/+$/, '');
+const configuredSiteUrl = (process.env.VITE_SITE_URL || '').trim();
+const siteUrl = (configuredSiteUrl || 'https://stellansolutions.com').replace(/\/+$/, '');
 
 function fail(message) {
   throw new Error(`Generation failed: ${message}`);

@@ -18,7 +18,7 @@ const jsonLdScript = (value: unknown): string => {
 export function renderHead(metadata: PageMetadata, siteUrl = siteConfig.siteUrl): string {
   const normalizedSiteUrl = normalizeSiteUrl(siteUrl);
   const canonical = canonicalUrl(normalizedSiteUrl, metadata.pathname);
-  const image = new URL('/og-cover.svg', `${normalizedSiteUrl}/`).toString();
+  const image = new URL('/og-cover.png', `${normalizedSiteUrl}/`).toString();
   const robots = metadata.noindex ? 'noindex,nofollow' : 'index,follow';
   const tags = [
     `<title>${attributeEscape(metadata.title)}</title>`,
@@ -35,12 +35,12 @@ export function renderHead(metadata: PageMetadata, siteUrl = siteConfig.siteUrl)
     `<meta property="og:image" content="${attributeEscape(image)}" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
-    `<meta property="og:image:alt" content="${siteConfig.name} technology services" />`,
+    `<meta property="og:image:alt" content="${siteConfig.name} — cybersecurity and risk advisory" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${attributeEscape(metadata.title)}" />`,
     `<meta name="twitter:description" content="${attributeEscape(metadata.description)}" />`,
     `<meta name="twitter:image" content="${attributeEscape(image)}" />`,
-    `<meta name="twitter:image:alt" content="${siteConfig.name} technology services" />`,
+    `<meta name="twitter:image:alt" content="${siteConfig.name} — cybersecurity and risk advisory" />`,
     `<meta name="keywords" content="${attributeEscape(metadata.keywords.join(', '))}" />`,
     ...metadata.jsonLd.map(jsonLdScript)
   ];

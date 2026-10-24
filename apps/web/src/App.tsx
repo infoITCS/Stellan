@@ -5,9 +5,11 @@ import { Footer } from './components/Footer.tsx';
 import { HomePage } from './pages/HomePage.tsx';
 import { ServicesPage } from './pages/ServicesPage.tsx';
 import { ServicePage } from './pages/ServicePage.tsx';
+import { CybersecurityPage } from './pages/CybersecurityPage.tsx';
 import { AboutPage } from './pages/AboutPage.tsx';
 import { ContactPage } from './pages/ContactPage.tsx';
 import { PrivacyPage } from './pages/PrivacyPage.tsx';
+import { TermsPage } from './pages/TermsPage.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
 
 interface AppProps {
@@ -23,12 +25,16 @@ function Page({ route }: { route: RouteDefinition }) {
       return <ServicesPage />;
     case 'service':
       return route.service ? <ServicePage service={route.service} /> : <NotFoundPage />;
+    case 'cybersecurity':
+      return <CybersecurityPage />;
     case 'about':
       return <AboutPage />;
     case 'contact':
       return <ContactPage />;
     case 'privacy':
       return <PrivacyPage />;
+    case 'terms':
+      return <TermsPage />;
     case 'not-found':
       return <NotFoundPage />;
     default:

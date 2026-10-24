@@ -1,4 +1,4 @@
-import { contactPageFaqs, getService, serviceSlugs, servicesPageFaqs, type Service, type ServiceSlug } from './content.ts';
+import { contactPageFaqs, founder, getService, serviceSlugs, services, servicesPageFaqs, type Service, type ServiceSlug } from './content.ts';
 import { isIndexableSiteUrl, normalizePathname, normalizeSiteUrl, siteConfig } from './site.ts';
 
 export type JsonLd = Record<string, unknown>;
@@ -7,13 +7,13 @@ export interface PageMetadata {
   title: string;
   description: string;
   pathname: string;
-  ogType: 'website';
+  ogType: 'website' | 'article';
   keywords: string[];
   noindex: boolean;
   jsonLd: JsonLd[];
 }
 
-export type PageKey = 'home' | 'services' | 'service' | 'about' | 'contact' | 'privacy' | 'not-found';
+export type PageKey = 'home' | 'services' | 'service' | 'cybersecurity' | 'about' | 'contact' | 'privacy' | 'terms' | 'not-found';
 
 export interface RouteDefinition {
   pathname: string;
@@ -35,30 +35,37 @@ const staticPages: StaticPage[] = [
   {
     pathname: '/',
     page: 'home',
-    title: 'Stellan Solutions | Technology services for modern teams',
-    description: 'Stellan Solutions helps teams make technology clearer, safer, and more capable through practical services spanning cloud, security, automation, AI, and web engineering.',
-    keywords: ['technology services', 'technology partner', 'managed IT', 'cloud services', 'cybersecurity']
+    title: 'Stellan Solutions | Cybersecurity and risk advisory',
+    description: 'Cybersecurity and risk advisory for mid-sized organizations: security assessments, prioritized roadmaps, compliance readiness, and fractional CISO support.',
+    keywords: ['cybersecurity advisory', 'risk advisory', 'vCISO', 'security assessment', 'NIST CSF', 'ISO 27001', 'CMMC']
   },
   {
     pathname: '/services',
     page: 'services',
-    title: 'Technology services | Stellan Solutions',
-    description: 'Explore Stellan Solutions services for managed IT, cloud architecture, cybersecurity, networks, consulting, automation, governed AI, and secure web development.',
-    keywords: ['technology consulting', 'IT services', 'cloud architecture', 'cybersecurity', 'enterprise automation']
+    title: 'Cybersecurity and advisory services | Stellan Solutions',
+    description: 'Security assessments, compliance readiness, fractional CISO support, cloud architecture, managed IT, networks, automation, AI, and secure web development.',
+    keywords: ['cybersecurity services', 'security assessment', 'compliance readiness', 'IT consulting', 'cloud services']
+  },
+  {
+    pathname: '/services/cybersecurity',
+    page: 'cybersecurity' as PageKey,
+    title: 'Cybersecurity Services | Stellan Solutions',
+    description: 'Penetration testing, managed SOC, cloud security, Zero Trust and compliance support from Stellan Solutions. Reduce risk and respond faster.',
+    keywords: ['cybersecurity services', 'penetration testing', 'managed SOC', 'Zero Trust', 'compliance', 'vulnerability assessment']
   },
   {
     pathname: '/about',
     page: 'about',
-    title: 'About Stellan Solutions | Technology, made legible',
-    description: 'Learn how Stellan Solutions approaches technology delivery through clear decisions, careful operations, and remote partnership with distributed teams.',
-    keywords: ['technology strategy', 'remote technology delivery', 'distributed technology team']
+    title: 'About Stellan Solutions | Cybersecurity and risk advisory',
+    description: 'Meet Umair Mazhar, founder of Stellan Solutions, and learn how two decades of security experience shape our advisory work.',
+    keywords: ['Umair Mazhar', 'security consultant', 'CISM', 'CRISC', 'ISO 27001', 'Ashburn Virginia']
   },
   {
     pathname: '/contact',
     page: 'contact',
-    title: 'Contact Stellan Solutions | Start a technology conversation',
-    description: 'Tell Stellan Solutions about a technology challenge, service question, or project. Share the context, constraints, and desired outcome for a practical first conversation.',
-    keywords: ['contact technology team', 'technology project inquiry', 'remote technology services']
+    title: 'Contact Stellan Solutions | Book a security conversation',
+    description: 'Contact Stellan Solutions in Ashburn, Virginia. Email info@stellansolutions.com, book a 30-minute call, or send a security or advisory question. Reply within one business day.',
+    keywords: ['contact security consultant', 'book security call', 'Ashburn Virginia cybersecurity']
   },
   {
     pathname: '/privacy',
@@ -66,6 +73,13 @@ const staticPages: StaticPage[] = [
     title: 'Privacy | Stellan Solutions',
     description: 'Read the Stellan Solutions website privacy overview, including contact-form data, locally served assets, and operational responsibilities.',
     keywords: ['Stellan Solutions privacy', 'website privacy notice']
+  },
+  {
+    pathname: '/terms',
+    page: 'terms',
+    title: 'Terms | Stellan Solutions',
+    description: 'Read the terms that apply to the Stellan Solutions website, content, and advisory enquiries.',
+    keywords: ['Stellan Solutions terms', 'website terms']
   }
 ];
 
@@ -73,11 +87,42 @@ const isServiceSlug = (value: string): value is ServiceSlug => serviceSlugs.incl
 
 function organization(siteUrl: string): JsonLd {
   return {
-    '@type': 'Organization',
+    '@type': 'ProfessionalService',
+    '@id': `${siteUrl}/#organization`,
     name: siteConfig.name,
     url: siteUrl,
     logo: `${siteUrl}/favicon.svg`,
-    description: siteConfig.description
+    image: `${siteUrl}/og-cover.png`,
+    description: siteConfig.description,
+    email: siteConfig.contactEmail,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Ashburn',
+      addressRegion: 'VA',
+      postalCode: '20147',
+      addressCountry: 'US'
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'United States'
+    },
+    founder: {
+      '@type': 'Person',
+      name: founder.name,
+      jobTitle: founder.role,
+      knowsAbout: founder.certifications,
+      sameAs: [founder.linkedin]
+    },
+    knowsAbout: services.map((service) => service.title),
+    sameAs: siteConfig.socials.filter((social) => social.href.startsWith('http')).map((social) => social.href),
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      email: siteConfig.contactEmail,
+      availableLanguage: ['en'],
+      areaServed: 'US'
+    },
+    priceRange: '$$'
   };
 }
 
@@ -140,6 +185,7 @@ function createMetadata(input: {
   siteUrl: string;
   keywords: string[];
   structuredType?: 'WebPage' | 'CollectionPage';
+  ogType?: 'website' | 'article';
   noindex?: boolean;
   jsonLd?: JsonLd[];
 }): PageMetadata {
@@ -150,11 +196,15 @@ function createMetadata(input: {
     title: input.title,
     description: input.description,
     pathname,
-    ogType: 'website',
+    ogType: input.ogType ?? 'website',
     keywords: input.keywords,
     noindex,
     jsonLd: [
       ...(input.jsonLd ?? []),
+      {
+        '@context': 'https://schema.org',
+        ...organization(input.siteUrl)
+      },
       webPage(pathname, input.title, input.description, input.siteUrl, noindex, input.structuredType),
       breadcrumbList(pathname, input.title, input.siteUrl)
     ]
@@ -179,6 +229,23 @@ function staticRoute(page: StaticPage, siteUrl: string): RouteDefinition {
     pageStructuredData = [faqPage(servicesPageFaqs)];
   } else if (page.page === 'contact') {
     pageStructuredData = [faqPage(contactPageFaqs)];
+  } else if (page.page === 'cybersecurity') {
+    pageStructuredData = [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Cybersecurity Services',
+        serviceType: 'Cybersecurity',
+        description: 'Penetration testing, managed SOC, cloud security, Zero Trust and compliance support from Stellan Solutions. Reduce risk and respond faster.',
+        provider: organization(siteUrl),
+        areaServed: { '@type': 'Country', name: 'United States' }
+      },
+      faqPage([
+        { question: 'Which security frameworks do you work with?', answer: 'We work with NIST CSF, ISO 27001, SOC 2, CIS Controls, HIPAA, and CMMC.' },
+        { question: 'Do you provide ongoing security monitoring or a vCISO?', answer: 'Yes. Monitoring can be included as a defined service layer, and our vCISO retainer provides senior security leadership, governance, risk reporting, and an accountable owner for the program.' },
+        { question: 'Can you help us prepare for a customer security review or audit?', answer: 'Yes. We organize evidence, clarify control ownership, identify gaps, and build a prioritized remediation path mapped to the relevant framework.' }
+      ])
+    ];
   }
 
   return {
@@ -191,7 +258,7 @@ function staticRoute(page: StaticPage, siteUrl: string): RouteDefinition {
       pathname: page.pathname,
       siteUrl,
       keywords: page.keywords,
-      structuredType: page.page === 'services' ? 'CollectionPage' : undefined,
+      structuredType: page.page === 'services' || page.page === 'cybersecurity' ? 'CollectionPage' : undefined,
       jsonLd: pageStructuredData
     })
   };
@@ -278,14 +345,12 @@ export function getStaticRoutes(siteUrl = siteConfig.siteUrl): RouteDefinition[]
   const normalizedSiteUrl = normalizeSiteUrl(siteUrl);
   return [
     ...staticPages.map((page) => staticRoute(page, normalizedSiteUrl)),
-    ...serviceSlugs.map((slug) => serviceRoute(getService(slug) as Service, normalizedSiteUrl))
+    ...serviceSlugs
+      .filter((slug) => slug !== 'cybersecurity')
+      .map((slug) => serviceRoute(getService(slug) as Service, normalizedSiteUrl))
   ];
 }
 
 export function getStaticRoutePaths(siteUrl = siteConfig.siteUrl): string[] {
   return getStaticRoutes(siteUrl).map((route) => route.pathname);
-}
-
-export function getAllRoutePaths(siteUrl = siteConfig.siteUrl): string[] {
-  return [...getStaticRoutePaths(siteUrl), '/404'];
 }

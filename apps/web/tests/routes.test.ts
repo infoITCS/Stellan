@@ -28,9 +28,8 @@ test('route resolution normalizes paths and rejects unknown routes', () => {
   assert.equal(resolveRoute('/').pathname, '/');
   assert.equal(resolveRoute('/services/').pathname, '/services');
   assert.equal(resolveRoute('/services/managed-it?from=nav').pathname, '/services/managed-it');
-  for (const pathname of ['/insights', '/insights/cloud-cost-control', '/insights/security-readiness', '/insights/governed-ai']) {
-    assert.equal(resolveRoute(pathname).status, 404);
-  }
+  assert.equal(resolveRoute('/insights').status, 404);
+  assert.equal(resolveRoute('/terms').status, 200);
   assert.equal(resolveRoute('/services/not-a-service').status, 404);
   assert.equal(resolveRoute('/unknown').pathname, '/404');
   assert.equal(resolveRoute('/unknown').metadata.pathname, '/404');
@@ -55,8 +54,12 @@ test('route resolution normalizes paths and rejects unknown routes', () => {
   assert.match(serviceHead, /<script type="application\/ld\+json" data-stellan-head>/);
   assert.match(renderHead(resolveRoute('/').metadata), /<meta name="robots" content="noindex,nofollow" \/>/);
   assert.equal(new Set(getStaticRoutePaths()).size, getStaticRoutePaths().length);
-  assert.equal(getStaticRoutePaths().length, 13);
-  assert.equal(getStaticRoutePaths().some((pathname) => pathname.startsWith('/insights')), false);
+  assert.equal(getStaticRoutePaths().length, 14);
+  assert.equal(resolveRoute('/services/cybersecurity').metadata.title, 'Cybersecurity Services | Stellan Solutions');
+  assert.equal(resolveRoute('/services/cybersecurity').metadata.jsonLd.some((item) => item['@type'] === 'Service'), true);
+  assert.equal(resolveRoute('/services/cybersecurity').metadata.jsonLd.some((item) => item['@type'] === 'FAQPage'), true);
+  assert.equal(resolveRoute('/services/cybersecurity').metadata.description.length <= 155, true);
+  assert.match(renderHead(resolveRoute('/').metadata, 'https://example.com/'), /"@type":"ProfessionalService"/);
   for (const pathname of getStaticRoutePaths()) {
     assert.ok(resolveRoute(pathname).metadata.jsonLd.length > 0);
   }

@@ -1,6 +1,7 @@
 interface ImportMetaEnv {
   readonly VITE_SITE_URL?: string;
   readonly VITE_LEADS_ENDPOINT?: string;
+  readonly VITE_BOOKING_URL?: string;
   readonly SITE_URL?: string;
   readonly WEB_ORIGIN?: string;
   readonly MODE?: string;

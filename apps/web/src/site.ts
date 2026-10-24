@@ -1,7 +1,7 @@
 import { services } from './content.ts';
 
 const runtimeEnv = (import.meta as ImportMeta & { env?: ImportMetaEnv }).env ?? {};
-const productionSiteUrl = 'https://stellan-solutions.vercel.app';
+const productionSiteUrl = 'https://stellansolutions.com';
 const defaultSiteUrl = runtimeEnv.MODE === 'production' ? productionSiteUrl : 'http://localhost:4173';
 
 export interface NavigationItem {
@@ -17,28 +17,50 @@ export interface NavigationChildItem {
   description?: string;
 }
 
-export const servicesNavigation: readonly NavigationChildItem[] = services.map((service) => ({
-  label: service.shortTitle,
-  href: `/services/${service.slug}`,
-  description: service.eyebrow
-}));
+export const servicesNavigation: readonly NavigationChildItem[] = [
+  { label: 'Cybersecurity', href: '/services/cybersecurity', description: 'Assessments, SOC, Zero Trust, compliance' },
+  ...services.filter((s) => s.slug !== 'cybersecurity').map((service) => ({
+    label: service.shortTitle,
+    href: `/services/${service.slug}`,
+    description: service.eyebrow
+  }))
+];
 
 export const siteConfig = {
   name: 'Stellan Solutions',
   shortName: 'Stellan',
   siteUrl: runtimeEnv.VITE_SITE_URL || runtimeEnv.SITE_URL || runtimeEnv.WEB_ORIGIN || defaultSiteUrl,
   leadsEndpoint: runtimeEnv.VITE_LEADS_ENDPOINT || '/api/v1/leads',
-  description: 'Remote technology delivery for teams building clearer, safer, more capable operations.',
+  bookingUrl: runtimeEnv.VITE_BOOKING_URL || '',
+  description: 'Cybersecurity and risk advisory for mid-sized organizations: assessments, roadmaps, compliance readiness, and fractional CISO support.',
+  contactEmail: 'info@stellansolutions.com',
+  address: 'Ashburn, Virginia 20147',
+  responseTime: 'Reply within 1 business day',
+  socials: [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: 'linkedin' as const },
+    { label: 'X', href: 'https://x.com/', icon: 'external' as const },
+    { label: 'Email', href: 'mailto:info@stellansolutions.com', icon: 'mail' as const }
+  ],
   navigation: [
     {
       label: 'Services',
       href: '/services',
-      description: 'Explore every service we deliver, from day-to-day operations to platform and security work.',
+      description: 'Cybersecurity and advisory work first, backed by the technical services that keep it operating.',
       children: servicesNavigation
     },
-    { label: 'About', href: '/about' }
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' }
   ] satisfies readonly NavigationItem[]
 } as const;
+
+export function getBookingUrl(): string {
+  const configured = siteConfig.bookingUrl.trim();
+  return configured || '/contact#contact-form';
+}
+
+export function isExternalBooking(): boolean {
+  return /^https?:\/\//i.test(getBookingUrl());
+}
 
 export function normalizePathname(value: string): string {
   let pathname = value.trim();

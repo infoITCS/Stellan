@@ -25,6 +25,47 @@ export function ServicePage({ service }: { service: Service }) {
         </Container>
       </section>
 
+      {service.frameworks ? (
+        <section className="section service-frameworks-section">
+          <Container>
+            <div className="section-topline">
+              <SectionHeading eyebrow="Frameworks" title="Mapped to the standards that matter to your buyers." description="We build one control set, then map the evidence to the obligations that actually apply." />
+              <span className="proof-note">{service.frameworks.length} frameworks</span>
+            </div>
+            <ul className="framework-grid">
+              {service.frameworks.map((framework) => <li key={framework}><strong>{framework}</strong><span>Assessment, mapping, and evidence support</span></li>)}
+            </ul>
+          </Container>
+        </section>
+      ) : null}
+
+      {service.engagements ? (
+        <section className="section offers-section-light" id="engagements">
+          <Container>
+            <div className="section-topline">
+              <SectionHeading eyebrow="Entry engagements" title="A defined first step." description="Fixed scope, clear deliverables, and a decision at the end. We will tell you when a larger engagement is not justified." />
+              <a className="arrow-link" href="/contact">Book a 30-min call <Icon name="arrow-up-right" size={17} /></a>
+            </div>
+            <div className="offer-grid">
+              {service.engagements.map((offer, index) => (
+                <article className="offer-card" key={offer.title}>
+                  <div className="offer-topline">
+                    <span className="offer-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="offer-duration">{offer.duration}</span>
+                  </div>
+                  <h3>{offer.title}</h3>
+                  <p>{offer.description}</p>
+                  <ul>
+                    {offer.includes.map((item) => <li key={item}><Icon name="check" size={14} />{item}</li>)}
+                  </ul>
+                  <a className="arrow-link" href="/contact">Discuss this engagement <Icon name="arrow-up-right" size={16} /></a>
+                </article>
+              ))}
+            </div>
+          </Container>
+        </section>
+      ) : null}
+
       <section className="section service-capabilities-section" id="capabilities">
         <Container>
           <div className="section-topline">
@@ -42,6 +83,26 @@ export function ServicePage({ service }: { service: Service }) {
           </div>
         </Container>
       </section>
+
+      {service.catalog ? (
+        <section className="section service-catalog-section">
+          <Container>
+            <div className="section-topline">
+              <SectionHeading eyebrow="Security service catalog" title="Specialist work across the security program." description="These services can be scoped individually or combined into a roadmap. The language is deliberately practical: what the work covers and why it matters." />
+              <span className="proof-note">{service.catalog.length} services</span>
+            </div>
+            <div className="catalog-grid">
+              {service.catalog.map((item, index) => (
+                <article className="catalog-card" key={item.title}>
+                  <span className="catalog-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </Container>
+        </section>
+      ) : null}
 
       <section className="section service-outcomes-section">
         <Container>

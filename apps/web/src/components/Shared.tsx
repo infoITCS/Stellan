@@ -55,7 +55,7 @@ export function ServiceCard({ service, featured = false }: { service: Service; f
       <p className="card-eyebrow">{service.eyebrow}</p>
       <h3>{service.title}</h3>
       <p>{service.description}</p>
-      <ArrowLink href={`/services/${service.slug}`}>Explore {service.shortTitle.toLowerCase()}</ArrowLink>
+      <ArrowLink href={`/services/${service.slug}`}>Explore {service.shortTitle}</ArrowLink>
     </article>
   );
 }

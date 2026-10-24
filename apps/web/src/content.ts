@@ -1,9 +1,9 @@
 export const serviceSlugs = [
-  'managed-it',
-  'cloud-services',
   'cybersecurity',
-  'network-infrastructure',
   'it-consulting',
+  'cloud-services',
+  'managed-it',
+  'network-infrastructure',
   'enterprise-automation',
   'ai-engineering',
   'web-development'
@@ -66,6 +66,51 @@ export interface Service {
   related: ServiceSlug[];
   tags: string[];
   icon: ServiceIcon;
+  frameworks?: string[];
+  engagements?: EngagementOffer[];
+  catalog?: Capability[];
+}
+
+export interface EngagementOffer {
+  title: string;
+  duration: string;
+  description: string;
+  includes: string[];
+}
+
+export interface FounderProfile {
+  name: string;
+  initials: string;
+  role: string;
+  location: string;
+  summary: string;
+  bio: string[];
+  certifications: string[];
+  linkedin: string;
+}
+
+export interface CaseStudy {
+  sector: string;
+  challenge: string;
+  work: string;
+  result: string;
+  metric: string;
+  metricLabel: string;
+  duration: string;
+  tags: string[];
+}
+
+export interface Partner {
+  name: string;
+  category: string;
+  logo: string;
+}
+
+export interface Testimonial {
+  quote: string;
+  role: string;
+  sector: string;
+  initials: string;
 }
 
 const supportFaqs: FaqItem[] = [
@@ -108,16 +153,20 @@ const cloudFaqs: FaqItem[] = [
 
 const securityFaqs: FaqItem[] = [
   {
+    question: 'Which security frameworks do you work with?',
+    answer: 'Our work commonly maps to NIST CSF, ISO 27001, SOC 2, CIS Controls, HIPAA, and CMMC. We select the framework that matches your obligations and customers, then build one control set that can be evidenced against each requirement.'
+  },
+  {
     question: 'What is included in a vulnerability assessment?',
-    answer: 'The assessment can cover asset discovery, configuration review, vulnerability scanning, validation, prioritization, and a practical remediation plan. Findings are ranked by exposure and business context rather than scanner severity alone.'
+    answer: 'The assessment covers asset discovery, configuration review, vulnerability scanning, validation, prioritization, and a practical remediation plan. Findings are ranked by exposure and business context rather than scanner severity alone.'
   },
   {
-    question: 'Can you help us prepare for a customer security review?',
-    answer: 'We can organize evidence, clarify control ownership, identify gaps, and create a prioritized remediation path. We do not promise a certification, audit result, or compliance outcome; those depend on the relevant framework and the evidence your organization provides.'
+    question: 'Can you help us prepare for a customer security review or audit?',
+    answer: 'Yes. We organize evidence, clarify control ownership, identify gaps, and build a prioritized remediation path mapped to the relevant framework. We prepare you to demonstrate the controls you actually operate; the certification or audit decision remains with the independent assessor.'
   },
   {
-    question: 'Do you provide ongoing security monitoring?',
-    answer: 'Monitoring can be included as a defined service layer when it fits the operating model. We also help design alert routes, response playbooks, and review cadences so signals lead to useful action instead of noise.'
+    question: 'Do you provide ongoing security monitoring or a vCISO?',
+    answer: 'Yes. Monitoring can be included as a defined service layer, and our vCISO retainer provides senior security leadership, governance, risk reporting, and an accountable owner for the program. We design alert routes, playbooks, and review cadences so signals lead to action instead of noise.'
   },
   {
     question: 'How do you balance security with delivery speed?',
@@ -220,7 +269,28 @@ const webFaqs: FaqItem[] = [
   }
 ];
 
-export const services: Service[] = [
+export const entryOffers: EngagementOffer[] = [
+  {
+    title: 'Security Posture Assessment',
+    duration: '2–3 weeks · fixed scope',
+    description: 'A clear, leadership-ready view of where the organization stands and what to fix first.',
+    includes: ['Asset and control review', 'Risk-ranked findings', '90-day remediation roadmap']
+  },
+  {
+    title: 'Fractional CISO (vCISO)',
+    duration: 'Monthly retainer',
+    description: 'Senior security leadership for teams that need direction, governance, and an accountable owner.',
+    includes: ['Security strategy and reporting', 'Risk register and control ownership', 'Vendor and audit support']
+  },
+  {
+    title: 'Customer Security Questionnaire Support',
+    duration: '5–10 business days',
+    description: 'Evidence-backed answers for enterprise buyers, without overstating your controls.',
+    includes: ['Questionnaire review', 'Evidence mapping', 'Gap list and response guidance']
+  }
+];
+
+const serviceDefinitions: Service[] = [
   {
     slug: 'managed-it',
     number: '01',
@@ -299,29 +369,30 @@ export const services: Service[] = [
   },
   {
     slug: 'cybersecurity',
-    number: '03',
+    number: '01',
     title: 'Cybersecurity',
     shortTitle: 'Cybersecurity',
-    eyebrow: 'Make risk understandable',
-    description: 'Security assessment and architecture work that helps teams prioritize what matters, build defensible habits, and prepare for scrutiny.',
-    h1: 'Security work that makes the next decision clearer.',
+    eyebrow: 'Proactive defense, measurable risk reduction',
+    description: 'Cybersecurity and risk advisory for mid-sized organizations: assessments, prioritized roadmaps, compliance readiness, and fractional CISO support.',
+    h1: 'Cybersecurity and risk advisory that makes the next decision clearer.',
     overview: [
-      'Cybersecurity is most useful when it helps a team choose what to protect, how to respond, and where to invest next. We start with the systems and decisions that matter, then turn broad risk language into specific work.',
-      'The result can include a vulnerability assessment, a security roadmap, architecture guidance, or incident readiness support. Each engagement keeps evidence, ownership, and limitations visible so leaders can make informed decisions.'
+      'We help organizations strengthen their security posture with practical controls, continuous visibility, and response-ready operating habits. From identity protection to threat detection and compliance, the work is designed to reduce risk, improve resilience, and protect critical business operations.',
+      'Every engagement starts with the decisions leadership needs to make. We assess what is exposed, validate what matters, and turn broad risk language into a sequenced plan with owners, evidence, and a review date.'
     ],
     capabilities: [
-      { title: 'Vulnerability assessment', description: 'Discover and validate weaknesses, then prioritize them by exposure, exploitability, and business context.' },
-      { title: 'Threat modeling', description: 'Examine important flows and failure points before they become expensive surprises.' },
-      { title: 'Identity security', description: 'Review access patterns, privileged workflows, and the controls around account lifecycle.' },
-      { title: 'Endpoint readiness', description: 'Strengthen configuration, monitoring, and response expectations for devices and workloads.' },
-      { title: 'Secure architecture', description: 'Embed data boundaries, controls, and observability into the systems being designed.' },
-      { title: 'Incident readiness', description: 'Create practical playbooks, roles, and exercises for the incidents a team may actually face.' },
-      { title: 'Security education', description: 'Give teams concise guidance they can use in the flow of everyday work.' }
+      { title: 'Vulnerability assessment and penetration testing', description: 'Identify exploitable weaknesses through controlled testing and strengthen defenses before attackers can cause damage. Findings are validated and prioritized with actionable remediation guidance.' },
+      { title: 'Security architecture and zero trust', description: 'Adopt a never-trust, always-verify model across users, devices, applications, and network access. Strengthen protection with granular identity-based controls and clear trust boundaries.' },
+      { title: 'Identity and access security', description: 'Control user identities, privileged access, and authentication policies across systems and applications. Reduce unauthorized access risk while supporting secure productivity.' },
+      { title: 'Compliance and audit readiness', description: 'Assess controls against ISO 27001, NIST CSF, SOC 2, CIS Controls, HIPAA, and CMMC. Improve governance, documentation, and regulatory readiness with evidence that can survive scrutiny.' },
+      { title: 'Detection, monitoring, and response', description: 'Centralize log collection, correlation, and alerting for better threat visibility. Design alert routes, response playbooks, and review cadences so signals lead to useful action.' },
+      { title: 'Incident response and recovery', description: 'Respond to cyber incidents with containment, investigation, recovery, and evidence-based analysis. Minimize downtime and restore operations with a structured, rehearsed plan.' },
+      { title: 'Cloud and application security', description: 'Assess cloud environments for misconfigurations, policy drift, and compliance issues. Protect web applications and APIs from common threats and malicious traffic.' },
+      { title: 'Security program leadership (vCISO)', description: 'Provide senior security direction, governance, risk reporting, and accountable ownership for teams that need leadership before a full-time CISO hire.' }
     ],
     outcomes: [
       'A prioritized view of security work and the reasoning behind it.',
       'Fewer unknowns around assets, access, and response ownership.',
-      'A roadmap that connects technical remediation to business context.',
+      'A roadmap that connects technical remediation to business and compliance context.',
       'Security practices that can be explained to technical and non-technical teams.'
     ],
     process: [
@@ -331,9 +402,33 @@ export const services: Service[] = [
       { title: 'Build the habit', description: 'Add review points, exercises, ownership, and evidence collection to the operating rhythm.' }
     ],
     faqs: securityFaqs,
-    related: ['cloud-services', 'network-infrastructure', 'managed-it'],
-    tags: ['Assessment', 'Threat modeling', 'Identity', 'Incident readiness'],
-    icon: 'shield'
+    related: ['it-consulting', 'cloud-services', 'managed-it'],
+    tags: ['Assessment', 'Zero trust', 'Compliance', 'Incident response'],
+    icon: 'shield',
+    frameworks: ['NIST CSF', 'ISO 27001', 'SOC 2', 'CIS Controls', 'HIPAA', 'CMMC'],
+    engagements: entryOffers,
+    catalog: [
+      { title: 'Vulnerability Assessment and Penetration Testing (VAPT)', description: 'Identify exploitable vulnerabilities through controlled testing and strengthen defenses before attackers can cause damage. Improve security posture with actionable findings and prioritized remediation guidance.' },
+      { title: 'Network Security Design and Hardening', description: 'Build resilient network environments with secure configurations, segmentation, and hardened access controls. Reduce attack surfaces while improving reliability and policy enforcement.' },
+      { title: 'Endpoint Detection and Response (EDR)', description: 'Detect suspicious activity on endpoints in real time and respond quickly to contain threats. Protect devices, users, and business data across modern work environments.' },
+      { title: 'Security Information and Event Management (SIEM)', description: 'Centralize log collection, correlation, and alerting for better threat visibility across your infrastructure. Accelerate detection and response with security monitoring that scales.' },
+      { title: 'Managed Security Services (MSS / SOC-as-a-Service)', description: 'Outsource continuous monitoring and incident handling to experienced security professionals and SOC workflows. Maintain stronger protection without expanding internal overhead.' },
+      { title: 'Identity and Access Management (IAM / PAM)', description: 'Control user identities, privileged access, and authentication policies across systems and applications. Reduce unauthorized access risks while supporting secure productivity.' },
+      { title: 'Zero Trust Security Architecture', description: 'Adopt a never-trust, always-verify model to secure users, devices, applications, and network access. Strengthen protection with granular identity-based controls.' },
+      { title: 'Security Audits and Regulatory Compliance', description: 'Assess your controls against ISO 27001, NIST, and related frameworks, then prepare for audits with confidence. Improve governance, documentation, and regulatory readiness.' },
+      { title: 'Incident Response, Forensics and Recovery', description: 'Respond rapidly to cyber incidents with containment, investigation, recovery, and evidence-based analysis. Minimize downtime and restore operations with a structured plan.' },
+      { title: 'Web Application Firewall (WAF) and App Security', description: 'Protect web applications from common threats such as SQL injection, bots, and malicious traffic. Improve application resilience and secure digital customer experiences.' },
+      { title: 'Email Security and Anti-Phishing', description: 'Defend inboxes against phishing, spoofing, malware, and business email compromise. Enhance communication security with layered protection controls.' },
+      { title: 'Cloud Security Posture Management (CSPM)', description: 'Continuously assess cloud environments for misconfigurations, policy drift, and compliance issues. Secure multi-cloud workloads with better visibility and governance.' },
+      { title: 'Data Loss Prevention (DLP)', description: 'Prevent sensitive data from leaving approved channels through monitoring, classification, and policy enforcement. Protect intellectual property and regulated information at scale.' },
+      { title: 'Threat Intelligence and Dark Web Monitoring', description: 'Track emerging threats, leaked credentials, and dark web indicators relevant to your business. Enable proactive defense with contextual threat intelligence.' },
+      { title: 'Red Team / Blue Team Exercises', description: 'Test defensive readiness through realistic attack simulations and coordinated response exercises. Improve detection capabilities, teamwork, and resilience under pressure.' },
+      { title: 'Security Awareness and Phishing Simulations', description: 'Train employees to recognize cyber risks and reduce human-error-driven incidents. Build a stronger security culture with practical simulations and awareness programs.' },
+      { title: 'Ransomware Protection and Backup Strategy', description: 'Reduce ransomware impact with layered defenses, secure backups, and recovery-focused planning. Protect business continuity with stronger resilience strategies.' },
+      { title: 'Firewall Management and Policy Review', description: 'Optimize firewall rules, access policies, and change controls for stronger network defense. Maintain secure traffic flow without unnecessary complexity.' },
+      { title: 'Multi-Factor Authentication (MFA) Implementation', description: 'Implement strong multi-factor authentication to secure user access across critical systems and applications. Lower account compromise risk with modern identity protection.' },
+      { title: 'Compliance Reporting and Risk Management', description: 'Translate security data into clear compliance reports and risk insights for leadership and auditors. Support informed decisions with measurable governance reporting.' }
+    ]
   },
   {
     slug: 'network-infrastructure',
@@ -527,4 +622,118 @@ export const services: Service[] = [
   }
 ];
 
+export const services: Service[] = serviceSlugs.map((slug, index) => {
+  const service = serviceDefinitions.find((item) => item.slug === slug);
+  if (!service) {
+    throw new Error(`Missing service definition for ${slug}`);
+  }
+  return { ...service, number: String(index + 1).padStart(2, '0') };
+});
+
 export const getService = (slug: string): Service | undefined => services.find((service) => service.slug === slug);
+
+export const coreServiceSlugs: readonly ServiceSlug[] = ['cybersecurity', 'it-consulting', 'cloud-services'];
+
+export const supportingServiceSlugs: readonly ServiceSlug[] = [
+  'managed-it',
+  'network-infrastructure',
+  'enterprise-automation',
+  'ai-engineering',
+  'web-development'
+];
+
+export const founder: FounderProfile = {
+  name: 'Umair Mazhar',
+  initials: 'UM',
+  role: 'Founder & Principal Consultant',
+  location: 'Ashburn, Virginia',
+  summary: 'Cybersecurity and risk leader with more than twenty years of experience helping organizations turn security obligations into prioritized, workable programs.',
+  bio: [
+    'Umair leads Stellan Solutions with a simple premise: security advice should help a leadership team make a decision, not bury it in another framework. His work spans security assessments, risk reporting, cloud security architecture, and the operating routines that keep a program honest after the assessment ends.',
+    'He has spent more than two decades in security and technology roles across regulated and distributed environments. That experience is backed by CISM, CRISC, CCSK, ISO 27001 Lead Implementer, and AWS Solutions Architect certifications, so the guidance connects board-level risk with the technical detail underneath it.',
+    'Stellan is based in Ashburn, Virginia and works with mid-sized organizations that need senior security judgment without building a full internal security department on day one.'
+  ],
+  certifications: [
+    'CISM',
+    'CRISC',
+    'CCSK',
+    'ISO 27001 Lead Implementer',
+    'AWS Solutions Architect'
+  ],
+  linkedin: 'https://www.linkedin.com/'
+};
+
+export const frameworks = [
+  { name: 'NIST CSF', detail: 'Program structure and maturity' },
+  { name: 'ISO 27001', detail: 'ISMS implementation and readiness' },
+  { name: 'SOC 2', detail: 'Trust Services Criteria evidence' },
+  { name: 'CIS Controls', detail: 'Prioritized technical safeguards' },
+  { name: 'HIPAA', detail: 'Healthcare security and privacy controls' },
+  { name: 'CMMC', detail: 'Defense supplier readiness' }
+] as const;
+
+export const partners: Partner[] = [
+  { name: 'Microsoft', category: 'Cloud & Productivity', logo: '/partners/microsoft.svg' },
+  { name: 'Amazon Web Services', category: 'Cloud Infrastructure', logo: '/partners/aws.svg' },
+  { name: 'Cisco', category: 'Networking', logo: '/partners/cisco.svg' },
+  { name: 'Splunk', category: 'Security Operations', logo: '/partners/splunk.svg' },
+  { name: 'CrowdStrike', category: 'Endpoint Security', logo: '/partners/crowdstrike.svg' },
+  { name: 'Qualys', category: 'Vulnerability Management', logo: '/partners/qualys.svg' },
+  { name: 'Fortinet', category: 'Network Security', logo: '/partners/fortinet.svg' },
+  { name: 'Palo Alto Networks', category: 'Security Platform', logo: '/partners/paloaltonetworks.svg' }
+];
+
+export const testimonials: Testimonial[] = [
+  {
+    quote: 'Stellan helped us turn a massive vulnerability backlog into a concrete, executable plan. For the first time, our leadership team knew exactly what to fix first and why.',
+    role: 'IT Director',
+    sector: 'Regional Utility',
+    initials: 'JD'
+  },
+  {
+    quote: 'Their approach to compliance readiness was practical and business-focused. We went from dreading security questionnaires to confidently responding with evidence in days, not weeks.',
+    role: 'VP of Operations',
+    sector: 'Healthcare Services',
+    initials: 'SM'
+  },
+  {
+    quote: 'Working with Umair gave us clarity on our CMMC obligations. The roadmap was realistic, prioritized correctly, and saved us from over-engineering our approach.',
+    role: 'Chief Information Officer',
+    sector: 'Defense Supplier',
+    initials: 'RK'
+  }
+];
+
+export const caseStudies: CaseStudy[] = [
+  {
+    sector: 'Regional Utility',
+    challenge: 'A long vulnerability backlog with no shared view of which findings created real operational exposure across critical infrastructure.',
+    work: 'Combined scanner evidence with business context, asset criticality, and compensating controls. Conducted stakeholder interviews to validate exploitability.',
+    result: 'Prioritized 400 findings into a 90-day remediation roadmap with named owners, review dates, and measurable acceptance criteria.',
+    metric: '400',
+    metricLabel: 'Findings Prioritized',
+    duration: '6 weeks',
+    tags: ['Vulnerability Management', 'Risk Prioritization', 'Critical Infrastructure']
+  },
+  {
+    sector: 'Healthcare Services Group',
+    challenge: 'Customer security reviews were slowing down sales cycles and producing inconsistent evidence across HIPAA and SOC 2 requirements.',
+    work: 'Mapped regulatory expectations to existing controls, identified evidence gaps, and built a reusable control matrix with automated tracking.',
+    result: 'Reduced questionnaire turnaround time by 75% and established a scalable evidence library used across all enterprise deals.',
+    metric: '75%',
+    metricLabel: 'Faster Turnaround',
+    duration: '4 weeks',
+    tags: ['HIPAA', 'SOC 2', 'Compliance Readiness']
+  },
+  {
+    sector: 'Defense Supplier',
+    challenge: 'CMMC 2.0 obligations were approaching, but the organization lacked clarity on scope, gaps, and realistic timeline for compliance.',
+    work: 'Performed detailed gap assessment against applicable CMMC practices, evaluated system boundaries, and created a risk-based remediation strategy.',
+    result: 'Delivered a phased 12-month readiness plan with prioritized controls, estimated costs, and clear milestones for certification success.',
+    metric: '100%',
+    metricLabel: 'Clear Roadmap',
+    duration: '5 weeks',
+    tags: ['CMMC 2.0', 'Defense Industrial Base', 'Readiness Assessment']
+  }
+];
+

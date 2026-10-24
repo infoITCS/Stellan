@@ -11,9 +11,5 @@
     "verbatimModuleSyntax": true,
     "allowImportingTsExtensions": true
   },
-  "include": [
-    "vite.config.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ]
+  "files": ["types/base.d.ts"]
 }
